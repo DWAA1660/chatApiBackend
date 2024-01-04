@@ -1,5 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit
+from werkzeug.http import parse_options_header
+from flask_socketio import SocketIO, join_room, leave_room
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -10,10 +12,23 @@ def index():
 
 @socketio.on('connect')
 def handle_connect():
-    print('Client connected')
-    emit('message_from_server', {'data': 'Connection established'})
+    # Get the WebSocket key from the request headers
+    # ws_key = request.headers.get('Sec-WebSocket-Key')
+
+    # Generate the WebSocket accept value
 
 
+    # Form the response headers
+    headers = [
+        ('Upgrade', 'websocket'),
+        ('Connection', 'Upgrade'),
+    ]
+
+    # Create a Flask response with status code 101 and the headers
+    response = app.response_class(status=101, headers=headers)
+
+    # Send the response to the client
+    return response
 
 @socketio.on('message_from_client')
 def handle_message(message):
