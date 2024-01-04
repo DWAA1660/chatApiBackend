@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
     <script>
         console.log(document.domain + location.port)
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        var socket = io.connect('http://' + document.domain + ':' + location.port + "/ai-chat");
 
         socket.on('message_from_server', function(data) {
             console.log('Received message from server:', data);

@@ -1,22 +1,16 @@
 from flask import Flask, render_template
-from flask_socketio import SocketIO, emit
+from flask_sock import Sock  # Import the Sock class
 
 app = Flask(__name__)
-socketio = SocketIO(app, namespace='/ws')  # Specify the namespace for your route
+sock = Sock(app)
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@socketio.on('connect', namespace='/ws')
-def handle_connect():
-    print('Client connected')
-    emit('message_from_server', {'data': 'Connection established'})
+@sock.route('/ai-chat')
+def echo(ws):
+    data = ws.receive()
+    print(data, type(ws))
 
-@socketio.on('message_from_client', namespace='/ws')
-def handle_message(message):
-    print('Received message:', message)
-    emit('message_from_server', {'data': 'Message received from server'})
-
-if __name__ == '__main__':
-    socketio.run(app, host="0.0.0.0", port=27181, debug=True)
+app.run(host="0.0.0.0", port=27181)
