@@ -28,13 +28,13 @@ wss.on('connection', (ws) => {
   ws.on('message', (message) => {
     console.log(`Received message: ${message}`);
     
-    
+    var messageStr = message.toString()
     // Checks if it is a string and starts with "chat:"
-    if (message.toString().startsWith("chat:")) {
+    if (messageStr.startsWith("chat:")) {
         console.log(1)
         // removes chat prefix 
-        message = message.replace("chat:", "")
-        var info = getInformation(message)
+        messageStr = messageStr.replace("chat:", "")
+        var info = getInformation(messageStr)
         var sender = info.extractedContent.sender
         var reciever = info.extractedContent.reciever
         console.log(`From: ${sender} to ${reciever}: ${info.stringWithoutExtractedContent}`)
