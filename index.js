@@ -16,6 +16,7 @@ app.use(bodyParser.json());
 
 app.post('/createUser', (req, res) => {
   const { name, gender, age } = req.body;
+  console.log(req.body, req.params, req)
 
   const stmt = db.prepare("INSERT INTO users (name, gender, age) VALUES (?, ?, ?)");
   stmt.run(name, gender, age);
