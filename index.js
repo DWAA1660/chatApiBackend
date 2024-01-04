@@ -45,6 +45,19 @@ wss.on('connection', (ws) => {
         });
             
     }
+    else if (messageStr.startsWith("createUser:")){
+        messageStr = messageStr.replace("createUser:", "")
+        var userInfoList = messageStr.split("%")
+        const stmt = db.prepare("INSERT INTO users VALUES (?, ?, ?)");
+        stmt.run(userInfoList[0], userInfoList[1], userInfoList[2]);
+        
+        stmt.finalize();
+        db.each("SELECT * FROM users", (err, row) => {
+            console.log(row.id + ": " + row.info);
+        });
+        console.log("User created")
+    }
+    
 });
 
 
