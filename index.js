@@ -53,7 +53,7 @@ wss.on('connection', (ws) => {
         
         stmt.finalize();
         db.each("SELECT * FROM users", (err, row) => {
-            console.log(row.id + ": " + row.info);
+            console.log(row);
         });
         console.log("User created")
     }
