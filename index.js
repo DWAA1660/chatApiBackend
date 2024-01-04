@@ -5,7 +5,7 @@ const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('database.db');
 
 
-db.run("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, gender TEXT, age INTEGER)");
+db.run("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, gender TEXT, age INTEGER)");
 
 
 const server = http.createServer();
@@ -48,7 +48,7 @@ wss.on('connection', (ws) => {
     else if (messageStr.startsWith("createUser:")){
         messageStr = messageStr.replace("createUser:", "")
         var userInfoList = messageStr.split("%")
-        const stmt = db.prepare("INSERT INTO users VALUES (?, ?, ?)");
+        const stmt = db.prepare("INSERT INTO users (name, gender, age) VALUES (?, ?, ?)");
         stmt.run(userInfoList[0], userInfoList[1], userInfoList[2]);
         
         stmt.finalize();
