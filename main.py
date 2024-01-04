@@ -8,6 +8,13 @@ socketio = SocketIO(app)
 def index():
     return render_template('index.html')
 
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+    emit('message_from_server', {'data': 'Connection established'})
+
+
+
 @socketio.on('message_from_client')
 def handle_message(message):
     print('Received message:', message)
