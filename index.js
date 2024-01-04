@@ -35,9 +35,13 @@ wss.on('connection', (ws) => {
         var info = getInformation(message)
         var sender = info.extractedContent.sender
         var reciever = info.extractedContent.reciever
-        wss.clients.forEach(client => {
-            client.send(`From: ${sender} to ${reciever}: ${info.stringWithoutExtractedContent}`)
-        })
+        console.log(`From: ${sender} to ${reciever}: ${info.stringWithoutExtractedContent}`)
+        wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(`From: ${sender} to ${reciever}: ${info.stringWithoutExtractedContent}`)
+            }
+          });
+            
     }
 });
 
