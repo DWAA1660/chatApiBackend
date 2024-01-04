@@ -11,6 +11,17 @@ db.run("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, gen
 const server = http.createServer();
 const wss = new WebSocket.Server({ noServer: true });
 
+function getInformation(inputString) {
+    const match = inputString.match(/%([^%]*)%.*?%([^%]*)%/);
+    if (match) {
+        const extractedContent = { sender: match[1], reciever: match[2] };
+        const stringWithoutExtractedContent = inputString.replace(/%([^%]*)%.*?%([^%]*)%/, '');
+        return { extractedContent, stringWithoutExtractedContent };
+    } else {
+        return null;
+    }
+}
+
 wss.on('connection', (ws) => {
   console.log('Client connected');
   console.log(wss.clients)
@@ -20,11 +31,18 @@ wss.on('connection', (ws) => {
     // Send the received message back to the client
     console.log(message + "h")
     
-    wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(`Server: ${message}`);
-        }
-      });
+    
+    // Checks if it is chat or function
+    if(message.startsWith("chat:")) {
+        // removes chat prefix 
+        message = message.replace("chat:", "")
+        var info = getInformation(message)
+        var sender = info.extractedContent.sender
+        var reciever = info.extractedContent.reciever
+        wss.clients.forEach(client => {
+            client.send(`From: ${sender} to ${reciever}: ${info.stringWithoutExtractedContent}`)
+        })
+    }
     
 
   });
