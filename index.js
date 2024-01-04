@@ -28,8 +28,10 @@ wss.on('connection', (ws) => {
   ws.on('message', (message) => {
     console.log(`Received message: ${message}`);
     
+    
     // Checks if it is a string and starts with "chat:"
-    if (typeof message === 'string' && message.startsWith("chat:")) {
+    if (message.toString().startsWith("chat:")) {
+        console.log(1)
         // removes chat prefix 
         message = message.replace("chat:", "")
         var info = getInformation(message)
@@ -40,7 +42,7 @@ wss.on('connection', (ws) => {
             if (client.readyState === WebSocket.OPEN) {
                 client.send(`From: ${sender} to ${reciever}: ${info.stringWithoutExtractedContent}`)
             }
-          });
+        });
             
     }
 });
