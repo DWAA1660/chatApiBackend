@@ -11,7 +11,12 @@ wss.on('connection', (ws) => {
     console.log(`Received message: ${message}`);
     // Send the received message back to the client
     console.log(message + "h")
-    ws.send(`Server: ${message}`);
+    wss.clients.forEach((client) => {
+        if (client !== ws && client.readyState === WebSocket.OPEN) {
+          client.send(`Server: ${message}`);
+        }
+      });
+    
 
   });
 
