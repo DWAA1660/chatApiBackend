@@ -10,8 +10,9 @@ wss.on('connection', (ws) => {
   ws.on('message', (message) => {
     console.log(`Received message: ${message}`);
     // Send the received message back to the client
+    console.log(message + "h")
     ws.send(`Server: ${message}`);
-    console.log(message)
+
   });
 
   ws.on('close', () => {
@@ -20,11 +21,12 @@ wss.on('connection', (ws) => {
 });
 
 server.on('upgrade', (request, socket, head) => {
+    console.log("h")
   wss.handleUpgrade(request, socket, head, (ws) => {
     wss.emit('connection', ws, request);
   });
 });
 
 server.listen(27181, () => {
-  console.log('WebSocket server is listening on port 8080');
+  console.log('WebSocket server is listening on port 27181');
 });
