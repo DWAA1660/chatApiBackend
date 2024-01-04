@@ -1,5 +1,12 @@
 const WebSocket = require('ws');
 const http = require('http');
+const sqlite3 = require('sqlite3').verbose();
+
+let db = new sqlite3.Database('database.db');
+
+
+db.run("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, gender TEXT, age INTEGER)");
+
 
 const server = http.createServer();
 const wss = new WebSocket.Server({ noServer: true });
