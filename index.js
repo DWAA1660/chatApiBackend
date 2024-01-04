@@ -25,15 +25,11 @@ function getInformation(inputString) {
 wss.on('connection', (ws) => {
   console.log('Client connected');
   console.log(wss.clients)
-
   ws.on('message', (message) => {
     console.log(`Received message: ${message}`);
-    // Send the received message back to the client
-    console.log(message + "h")
     
-    
-    // Checks if it is chat or function
-    if(message.startsWith("chat:")) {
+    // Checks if it is a string and starts with "chat:"
+    if (typeof message === 'string' && message.startsWith("chat:")) {
         // removes chat prefix 
         message = message.replace("chat:", "")
         var info = getInformation(message)
@@ -43,7 +39,8 @@ wss.on('connection', (ws) => {
             client.send(`From: ${sender} to ${reciever}: ${info.stringWithoutExtractedContent}`)
         })
     }
-    
+});
+
 
   });
 
