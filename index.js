@@ -79,9 +79,7 @@ wss.on('connection', (ws) => {
         var sender = info.extractedContent.sender
         var reciever = info.extractedContent.reciever
         db.all("SELECT username FROM users WHERE id = ?", [sender], (err, rows) => {
-            console.log("User created", rows, rows[0]);
-            res.status(200)
-            res.send(rows[0].id.toString());
+
     
             console.log(`From: ${rows[0].username} to ${reciever}: ${info.stringWithoutExtractedContent}`)
             wss.clients.forEach((client) => {
