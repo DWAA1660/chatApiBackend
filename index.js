@@ -15,28 +15,36 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post('/createUser', (req, res) => {
-    var acct
-  const { username, gender, age, password } = req.body;
-  console.log('Received Request Body:', req.body);
-  db.all("SELECT username FROM users WHERE username = ?", [username], (err, row) => {
-    acct = row
-    if (row != null){
+    let acct;
+
+    const { username, gender, age, password } = req.body;
+    console.log('Received Request Body:', req.body);
+
+    db.all("SELECT username FROM users WHERE username = ?", [username], (err, rows) => {
+        if (err) {
+        // Handle the error
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+        return;
+        }
+
+        acct = rows;
+
+        if (acct && acct.length > 0) {
         res.status(201).send("Account with that username already exists");
         console.log("Account with that username already exists");
-        return
-    }
+        return;
+        }
 
-  const stmt = db.prepare("INSERT INTO users (username, gender, age, password) VALUES (?, ?, ?, ?)");
-  stmt.run(username, gender, age, password);
-  stmt.finalize();
+        const stmt = db.prepare("INSERT INTO users (username, gender, age, password) VALUES (?, ?, ?, ?)");
+        stmt.run(username, gender, age, password);
+        stmt.finalize();
 
-
+        console.log("User created", acct, acct);
+        res.status(200).send(acct);
     });
-
-  console.log("User created", acct[0], acct);
-  res.status(200).send(acct[0]);
 });
-
+  
 
 
 wss.on('connection', (ws) => {
