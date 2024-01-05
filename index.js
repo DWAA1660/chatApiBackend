@@ -42,7 +42,7 @@ app.post('/createUser', (req, res) => {
 
         db.all("SELECT id FROM users WHERE username = ?", [username], (err, rows) => {
             console.log("User created", rows, rows[0]);
-            res.status(200).send(rows[0].id);
+            res.status(200).sendStatus(rows[0].id.toString());
     
         })
         });
