@@ -15,7 +15,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post('/createUser', (req, res) => {
-    let acct
+    var acct
   const { username, gender, age, password } = req.body;
   console.log('Received Request Body:', req.body);
   db.all("SELECT username FROM users WHERE username = ?", [username], (err, row) => {
