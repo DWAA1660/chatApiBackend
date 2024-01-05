@@ -62,9 +62,9 @@ app.post('/createUser', (req, res) => {
   
 app.post('/checkUser', (req, res) => {
   let acct;
-
-  const { username, password } = req.body;
   console.log('Received Request Body:', req.body);
+  const { username, password } = req.body;
+
 
   db.all("SELECT * FROM users WHERE username = ? and password = ?", [username, password], (err, rows) => {
       if (err) {
