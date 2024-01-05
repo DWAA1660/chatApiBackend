@@ -15,7 +15,7 @@ const wss = new WebSocket.Server({ noServer: true });
 function getInformation(inputString) {
     const match = inputString.match(/%([^%]*)%.*?%([^%]*)%/);
     if (match) {
-        const extractedContent = { first: match[1], second: match[2] };
+        const extractedContent = { sender: match[1], reciever: match[2] };
         const stringWithoutExtractedContent = inputString.replace(/%([^%]*)%.*?%([^%]*)%/, '');
         return { extractedContent, stringWithoutExtractedContent };
     } else {
