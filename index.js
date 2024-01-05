@@ -34,8 +34,10 @@ app.post('/createUser', (req, res) => {
     });
 
   console.log("User created");
-  res.status(200).send(acct);
+  res.status(200).send(acct[0]);
 });
+
+
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
