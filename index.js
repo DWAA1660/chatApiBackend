@@ -6,7 +6,7 @@ const sqlite3 = require('sqlite3').verbose();
 
 let db = new sqlite3.Database('database.db');
 
-db.run("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, gender TEXT, age INTEGER)");
+db.run("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, gender TEXT, age INTEGER, password TEXT)");
 
 const server = http.createServer();
 const wss = new WebSocket.Server({ noServer: true });
@@ -15,19 +15,26 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post('/createUser', (req, res) => {
-  const { name, gender, age } = req.body;
+    let acct
+  const { username, gender, age, password } = req.body;
   console.log('Received Request Body:', req.body);
+  db.all("SELECT username FROM users WHERE username = ?", [username], (err, row) => {
+    acct = row
+    if (row != null){
+        res.status(201).send("Account with that username already exists");
+        console.log("Account with that username already exists");
+        return
+    }
 
-  const stmt = db.prepare("INSERT INTO users (name, gender, age) VALUES (?, ?, ?)");
-  stmt.run(name, gender, age);
+  const stmt = db.prepare("INSERT INTO users (username, gender, age, password) VALUES (?, ?, ?, ?)");
+  stmt.run(username, gender, age, password);
   stmt.finalize();
 
-  db.each("SELECT * FROM users", (err, row) => {
-    console.log(row);
-  });
+
+    });
 
   console.log("User created");
-  res.status(200).send("User created successfully");
+  res.status(200).send(acct);
 });
 
 wss.on('connection', (ws) => {
