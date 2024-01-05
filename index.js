@@ -40,9 +40,12 @@ app.post('/createUser', (req, res) => {
         stmt.run(username, gender, age, password);
         stmt.finalize();
 
-        console.log("User created", acct, acct);
-        res.status(200).send(acct);
-    });
+        db.all("SELECT username FROM users WHERE username = ?", [username], (err, rows) => {
+            console.log("User created", rows, rows[0]);
+            res.status(200).send(rows);
+    
+        })
+        });
 });
   
 
