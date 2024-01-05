@@ -78,12 +78,20 @@ wss.on('connection', (ws) => {
         var info = getInformation(messageStr)
         var sender = info.extractedContent.sender
         var reciever = info.extractedContent.reciever
-        console.log(`From: ${sender} to ${reciever}: ${info.stringWithoutExtractedContent}`)
-        wss.clients.forEach((client) => {
-            if (client.readyState === WebSocket.OPEN) {
-                client.send(`From: ${sender} to ${reciever}: ${info.stringWithoutExtractedContent}`)
-            }
-        });
+        db.all("SELECT username FROM users WHERE id = ?", [sender], (err, rows) => {
+            console.log("User created", rows, rows[0]);
+            res.status(200)
+            res.send(rows[0].id.toString());
+    
+            console.log(`From: ${rows[0].username} to ${reciever}: ${info.stringWithoutExtractedContent}`)
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(`From: ${rows[0].username} to ${reciever}: ${info.stringWithoutExtractedContent}`)
+                }
+            });
+    
+        })
+
     }
   });
 
