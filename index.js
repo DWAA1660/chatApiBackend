@@ -33,7 +33,7 @@ app.post('/createUser', (req, res) => {
 
     });
 
-  console.log("User created");
+  console.log("User created", acct[0], acct);
   res.status(200).send(acct[0]);
 });
 
