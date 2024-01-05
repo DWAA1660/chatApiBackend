@@ -60,6 +60,32 @@ app.post('/createUser', (req, res) => {
         });
 });
   
+app.post('/checkUser', (req, res) => {
+  let acct;
+
+  const { username, password } = req.body;
+  console.log('Received Request Body:', req.body);
+
+  db.all("SELECT * FROM users WHERE username = ? and password = ?", [username, password], (err, rows) => {
+      if (err) {
+      // Handle the error
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+      return;
+      }
+
+      acct = rows;
+
+      if (acct && acct.length > 0) {
+      res.status(200)
+      res.send(rows[0].id.toString());
+      console.log("Logged in succesfully");
+      return;
+      }else {
+        res.status(201).send("Incorrect username or password");
+      }
+      });
+});
 
 
 wss.on('connection', (ws) => {
